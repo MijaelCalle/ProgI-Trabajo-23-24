@@ -1,0 +1,3 @@
+C:/Users/the_b/OneDrive/Desktop/UCLM/2023-2024/FPI/ProgI-Trabajo-23-24/cmake-build-debug/CMakeFiles/ProgI_Trabajo_23_24.dir
+C:/Users/the_b/OneDrive/Desktop/UCLM/2023-2024/FPI/ProgI-Trabajo-23-24/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/the_b/OneDrive/Desktop/UCLM/2023-2024/FPI/ProgI-Trabajo-23-24/cmake-build-debug/CMakeFiles/rebuild_cache.dir
