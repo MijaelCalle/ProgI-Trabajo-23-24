@@ -352,7 +352,3 @@ void rellVecMat(char nom[F][C], int hEntrada[F][M], int hSalida[F][M], int total
     }
     *n=0;
 }
-
-
-
-// Con resetear se refiere a borrar sólo los salarios de los empleados?
