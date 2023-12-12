@@ -1,13 +1,14 @@
-//GRUPO 11
+/////////////////////////////////////////////////////////////////////GRUPO 11///////////////////////////////////////////////////////////////////////////////
 //MIJAEL CALLE CANQUI
 //RODRIGO ABRIL MANZANARES
 //FRANCESKA ANTUANETTE CAFIERO GASCO
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
 #include <time.h>
-#define F 20
-#define C 30
-#define M 2
+#define F 20 //Flilas.
+#define C 30 //Columnas.
+#define M 2 //Columnas.
+///////////////////////////////////////////////////////////////////PROTOTIPOS MENÚ//////////////////////////////////////////////////////////////////////////
 //1.-
 void altaEmp(char nom[F][C], long id[F], int *n);
 //2.-
@@ -19,37 +20,33 @@ void calcSalMen(char nom[F][C], int totalHM[F][C], int totalH[F], float salarioT
 //5.-
 void darBajaEmp(char nom[F][C], int totalHM[F][C], int totalH[F], float salarioT[F], long id[F], int *n);
 
-//Otras funciones.
+//////////////////////////////////////////////////////////////PROTOTIPOS OTRAS FUNCIONES////////////////////////////////////////////////////////////////////
+
+int menu();
 void Get_hora(int *hora,int *min);
 void rellVecMat(char nom[F][C], int hEntrada[F][M], int hSalida[F][M], int totalHM[F][C], int totalH[F], float salarioT[F], long id[F], int *n);
 int compRepId(long num, long id[F]);
 int compEspId(long id[F]);
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //FUNCIÓN PRINCIPAL
 int main() {
-    int op;
-    int *numEmp=0;
-    int hora, minuto;
-    char emp[F][C];
-    long dni[F];
-    int totalHoras[F];
-    float salario[F];
+    int op; // Guarda el número de opción del menu.
+    int *numEmp=0; // Guarda el numero de empleados total registrados.
+    char emp[F][C]; // Guarda los empleados registrados(maximo 20 empleados)(con longitud máxima de 30 carácteres).
+    long dni[F]; // Guarda La id de los empleados registrados, es long porque necesitamos 8 cifras para representar el DNI.
+    int totalHoras[F]; // Guarda el número total de horas trabajadas por los empleados.
+    float salario[F]; //Guarda el salario total de los empleados.
     int horaEnt[F][M], horaSal[F][M], totalHorasMes[F][C];
-    rellVecMat(emp,horaEnt,horaSal,totalHorasMes,totalHoras,salario,dni,&numEmp);
+    // horaEnt: guarda la hora de entrada para cada empleado.
+    // horaSal: guarda la hora de salida para cada empleado.
+    // totalHorasMes: guarda las horas trabajadas de todos los dias del mes para cada empleado.
 
-    //Menú
+    rellVecMat(emp,horaEnt,horaSal,totalHorasMes,totalHoras,salario,dni,&numEmp);
+    // Llena las variables anteriores a "0".
+
     do{
-        printf("\n_____________________________CONTROL HORARIO DE EMPLEADOS______________________________");
-        printf("\n1) Dar de alta a un nuevo empleado.");
-        printf("\n2) Registrar hora de entrada.");
-        printf("\n3) Registrar hora de salida.");
-        printf("\n4) Calcular salario mensual.");
-        printf("\n5) Dar baja a un empleado.");
-        printf("\n6) Salir del programa.");
-        printf("\n_______________________________________________________________________________________");
-        printf("\nElige una opcion: ");
-        scanf("%i",&op);
+        op=menu(); //guarda el número seleccionado de la función menú.
         switch (op) {
             case 1:
                 altaEmp(emp,dni,&numEmp);
@@ -73,17 +70,20 @@ int main() {
                 printf("\nEscribe una opcion correcta.\n");
                 break;
         }
-    }while(op!=6);
+    }while(op!=6); //No finaliza hasta que el usuario seleccione la opción salir.
 
     return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //1.-
+//La función altaEmp registra a los empleados (como máximo 20).
+// Primero comprueba si la base de datos está llena, luego le pide al usuario la "ID"
+// Segundo comprueba si el id puesto por el usuario esta regitrado o no.
+// Tercero Pide al usuario el nombre y los apellidos.
 void altaEmp(char nom[F][C], long id[F], int *n){
     char op;
     long cod=0;
     int compId=0, posId=0;
-
     //Pide por pantalla nombre del empleado y dni, y los guarda en la matriz nom y vector id, guarda también el numero de empleados en el puntero *n.
     do{
         compId=compEspId(id); //comprueba si el en vector DNI hay espacio o esta lleno.
@@ -104,7 +104,7 @@ void altaEmp(char nom[F][C], long id[F], int *n){
                 fflush(stdin);
                 fgets(nom[compId],sizeof(nom[compId]),stdin);
 
-                //Reemplazo \n que pone fgets al final por \0
+                //Reemplazo "\n" que pone fgets al final por "\0" en la matriz "nom"(donde se guarda el nombre y los apellidos de los usuarios).
                 for (int i = 0; i < C; i++) {
                     if(nom[compId][i]=='\n'){
                         nom[compId][i]='\0';
@@ -127,11 +127,11 @@ void altaEmp(char nom[F][C], long id[F], int *n){
     }while(op!='N' && op!='n');
 
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //2.-
 void regHoraEnt(int hEntrada[F][M], int totalHM[F][C], long id[F]){
     long numCod=0;
-    int op=0,pos=0,d=0,hor=0,min=0;
+    int op=0,pos=0,d=0,hor=9,min=30;
 
     do{
         printf("\nNumero de codigo: ");
@@ -144,35 +144,27 @@ void regHoraEnt(int hEntrada[F][M], int totalHM[F][C], long id[F]){
 
             if(hEntrada[pos][d]!=0){
                 printf("\nEl usuario ya ha registrado la hora de entrada.");
-                op=1; //Para finalizar el do while
             }else{
-                Get_hora(&hor,&min);
+                //Get_hora(&hor,&min);
                 hEntrada[pos][0]=hor;
                 hEntrada[pos][1]=min;
                 totalHM[pos][d-1]=totalHM[pos][d-1]+((hor*60)+min);
-                op=1; //Para finalizar el do while
+                printf("\nHora de entrada registrada.");
             }
-
+            op=1;
         }else{
             printf("\nEl empleado con el codigo %ld no esta registrado.",numCod);
             op=1;
         }
     }while(op!=1);
 
-    for (int i = 0; i < F; i++) {
-        for (int j = 0; j < C; j++) {
-            printf("%i ",totalHM[i][j]);
-        }
-        printf("\n");
-    }
-
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //3.-
 void regHoraSal(char nom[F][C], int hSalida[F][M], int totalHM[F][C], long id[F]){
     long numCod=0;
-    int op=0,pos=0,d=0,hor=0,min=0;
-    int totalH;
+    int op=0,pos=0,d=0,hor=18,min=45;
+    int totalH=0;
 
     do{
         printf("\nNumero de codigo: ");
@@ -183,10 +175,19 @@ void regHoraSal(char nom[F][C], int hSalida[F][M], int totalHM[F][C], long id[F]
             printf("\nNumero de dia: ");
             scanf("%i",&d);
             if(totalHM[pos][d-1]!=0){
-                Get_hora(&hor,&min);
+                //Get_hora(&hor,&min);
                 hSalida[pos][0]=hor;
                 hSalida[pos][1]=min;
                 totalHM[pos][d-1]=((hor*60)+min)-totalHM[pos][d-1];
+
+                for (int i = 0; i < C; ++i) {
+                    totalH=totalH+totalHM[pos][i];
+                }
+                printf("\n---------------------------------------------------------------------------------------");
+                printf("\n| NOMBRE/APELLIDOS\t         | DNI\t    | HORAS/DIA %i | HORAS TOTAL/MES |",d);
+                printf("\n---------------------------------------------------------------------------------------");
+                printf("\n| %-30s | %-8ld | %-4i \t  | %-4i \t    |", nom[pos], id[pos],(totalHM[pos][d-1])/60,totalH/60);
+                printf("\n---------------------------------------------------------------------------------------");
             }else{
                 printf("\nEl usuario %ld no ha Registrado la hora de entrada.",numCod);
             }
@@ -197,17 +198,8 @@ void regHoraSal(char nom[F][C], int hSalida[F][M], int totalHM[F][C], long id[F]
         }
     }while(op!=1);
 
-    for (int i = 0; i < C; ++i) {
-        totalH=totalH+totalHM[pos][i];
-    }
-    printf("\n---------------------------------------------------------------------------------------");
-    printf("\n| NOMBRE/APELLIDOS\t         | DNI\t    | TOTAL HORAS | HORAS TOTAL MES |");
-    printf("\n---------------------------------------------------------------------------------------");
-    printf("\n| %-30s | %-8ld | %-4i \t  | %-4.i ", nom[pos], id[pos],(totalHM[pos][d-1])/60,totalH/60);
-    printf("\n---------------------------------------------------------------------------------------");
-
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //4.-
 void calcSalMen(char nom[F][C], int totalHM[F][C], int totalH[F], float salarioT[F], long id[F], int *n){
 
@@ -247,7 +239,7 @@ void calcSalMen(char nom[F][C], int totalHM[F][C], int totalH[F], float salarioT
     }
 
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //5.-
 void darBajaEmp(char nom[F][C], int totalHM[F][C], int totalH[F], float salarioT[F], long id[F], int *n){
     int op=0,pos=0;
@@ -265,6 +257,23 @@ void darBajaEmp(char nom[F][C], int totalHM[F][C], int totalH[F], float salarioT
             totalH[pos]=totalH[pos]/60;
             salarioT[pos]=totalH[pos]*8.00;
             finiquito=salarioT[pos]*0.03;
+
+            printf("\n---------------------------------------------------------------------------------------");
+            printf("\n| NOMBRE/APELLIDOS\t         | DNI\t    | TOTAL HORAS | SALARIO      | PLUS\t    |");
+            printf("\n---------------------------------------------------------------------------------------");
+            printf("\n| %-30s | %-8ld | %-4i\t  | %-8.2f EUR | %-4.2f EUR |", nom[pos], id[pos], totalH[pos], salarioT[pos], finiquito);
+            printf("\n---------------------------------------------------------------------------------------");
+
+            //Elimina los datos del empleado del empleado
+            id[pos]=0;
+            totalH[pos]=0;
+            salarioT[pos]=0.00;
+            for (int i=0; i<C; i++) {
+                nom[pos][i]='\0';
+                totalHM[pos][i]=0;
+            }
+            *n=*n-1; // Resta 1 al numero total de empleados porque se ha eliminado un usuario.
+
             op=1;
         }else{
         printf("\nEl empleado con el codigo %ld no esta registrado.",numCod);
@@ -273,25 +282,31 @@ void darBajaEmp(char nom[F][C], int totalHM[F][C], int totalH[F], float salarioT
     }while(op!=1);
 
 
-    printf("\n---------------------------------------------------------------------------------------");
-    printf("\n| NOMBRE/APELLIDOS\t         | DNI\t    | TOTAL HORAS | SALARIO      | PLUS\t    |");
-    printf("\n---------------------------------------------------------------------------------------");
-    printf("\n| %-30s | %-8ld | %-4i\t  | %-8.2f EUR | %-4.2f EUR |", nom[pos], id[pos], totalH[pos], salarioT[pos], finiquito);
-    printf("\n---------------------- Numero total de empleados registrados: %i -----------------------",*n);
-
-    //Elimina los datos del empleado del empleado
-    id[pos]=0;
-    totalH[pos]=0;
-    salarioT[pos]=0.00;
-        for (int i=0; i<C; i++) {
-        nom[pos][i]='\0';
-        totalHM[pos][i]=0;
-    }
 
 }
 
-////////////////////////////////////////////////FUNCIONES ADICIONALES////////////////////////////////////////////////
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////FUNCIONES ADICIONALES////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//función Menu: guarda la impresión por pantalla el menú en una funcion entera, luego retorna la opción seleccionada en la variable "op".
+int menu(){
+    int op=0;
+    printf("\n_____________________________CONTROL HORARIO DE EMPLEADOS______________________________");
+    printf("\n1) Dar de alta a un nuevo empleado.");
+    printf("\n2) Registrar hora de entrada.");
+    printf("\n3) Registrar hora de salida.");
+    printf("\n4) Calcular salario mensual.");
+    printf("\n5) Dar baja a un empleado.");
+    printf("\n6) Salir del programa.");
+    printf("\n______________________________________GAVICU_PAGA______________________________________");
+    printf("\nElige una opcion: ");
+    scanf(" %i",&op);
+    return op;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //comprueba si si esta lleno el vector de DNI.
 int compEspId(long id[F]){
     int rt=0,r=0,i=0;
@@ -309,7 +324,7 @@ int compEspId(long id[F]){
     }while(r!=1);
     return rt;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Comprueba si la Id esta repetida
 int compRepId(long num, long id[F]){
     int rt=-1;
@@ -320,7 +335,7 @@ int compRepId(long num, long id[F]){
     }
     return rt;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Hora
 void Get_hora(int *hora,int *min){
     struct tm *h;
@@ -330,7 +345,7 @@ void Get_hora(int *hora,int *min){
     *hora=h->tm_hour;
     *min=h->tm_min;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Rellena el vector DNI a 0, la matriz horaEnt/horaSal a 0, y el numEmp a 0.
 void rellVecMat(char nom[F][C], int hEntrada[F][M], int hSalida[F][M], int totalHM[F][C], int totalH[F], float salarioT[F], long id[F], int *n){
 
